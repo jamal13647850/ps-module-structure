@@ -8,7 +8,7 @@
 namespace pgsavis\psmstructure;
 
 
-abstract psPlugin extends Module
+abstract class psPlugin extends Module
 {
     abstract function __construct();
     public function install($sql_file='',$hooks=[],$tabs=[]){
