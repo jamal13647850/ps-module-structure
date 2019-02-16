@@ -8,7 +8,7 @@
 namespace pgsavis\psmstructure;
 
 
-class psPlugin
+interface psPlugin
 {
 
 }
