@@ -1,0 +1,17 @@
+{
+    "name": "pgsavis/ps-module-structure",
+    "description": "a structure for creating prestashop module",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Sayyed Jamal Ghasemi",
+            "email": "jamal13647850@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload" : {
+        "psr-4" :{
+            "pgsavis\\psmstructure\\" : "src/"
+        }
+    }
+}
