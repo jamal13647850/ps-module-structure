@@ -1,16 +1,20 @@
 <?php
+
 /**
  *@author Sayyed Jamal Ghasemi <https://www.linkedin.com/in/jamal1364/>
  * Date: 02/16/2019
  * Time: 14:40 PM
  */
-
+declare(strict_types=1);
 namespace pgsavis\psmstructure;
 
 
-abstract class psPlugin extends Module
+use Couchbase\BooleanFieldSearchQuery;
+
+abstract class psPlugin extends \Module
 {
-    public function __construct($name,$tab,$version,$author,$need_instance=0,$bootstrap=true,$displayName,$description,$confirmUninstall,$min,$max=_PS_VERSION_){
+    protected  $sqlFile;
+    public function __construct(String $name,$tab,$version,$author,$need_instance=0,$bootstrap=true,$displayName,$description,$confirmUninstall,$min,$max=_PS_VERSION_){
         parent::__construct();
         $this->name = $name; // internal identifier, unique and lowercase
         $this->tab = $tab; // backend module coresponding category
@@ -19,8 +23,6 @@ abstract class psPlugin extends Module
         $this->need_instance = $need_instance; // load the module when displaying the "Modules" page in backend
         $this->bootstrap = $bootstrap;
 
-
-
         $this->displayName = $this->l($displayName); // public name
         $this->description = $this->l($description); // public description
 
@@ -28,7 +30,8 @@ abstract class psPlugin extends Module
 
         $this->ps_versions_compliancy = array('min' => $min, 'max' => $max);
     }
-    public function install($sql_file='',$hooks=[],$tabs=[]){
+    abstract function setRequired($sqlFile);
+    public function install($sql_file='',$hooks=[],$tabs=[]):Boolean{
         // Call install parent method
         if (!parent::install())
             return false;
@@ -63,8 +66,7 @@ abstract class psPlugin extends Module
 
     }
 
-    public function loadSQLFile($sql_file)
-    {
+    public function loadSQLFile($sql_file){
         // Get install SQL file content
         $sql_content = file_get_contents($sql_file);
 
