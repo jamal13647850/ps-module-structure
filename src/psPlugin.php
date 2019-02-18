@@ -13,45 +13,71 @@ use Couchbase\BooleanFieldSearchQuery;
 
 abstract class psPlugin extends \Module
 {
-    protected  $sqlFile;
-    public function __construct(String $name,$tab,$version,$author,$need_instance=0,$bootstrap=true,$displayName,$description,$confirmUninstall,$min,$max=_PS_VERSION_){
-        parent::__construct();
-        $this->name = $name; // internal identifier, unique and lowercase
-        $this->tab = $tab; // backend module coresponding category
-        $this->version = $version; // version number for the module
-        $this->author = $author; // module author
-        $this->need_instance = $need_instance; // load the module when displaying the "Modules" page in backend
-        $this->bootstrap = $bootstrap;
+    private  $sqlFileInstall;
+    private  $sqlFileUinstall;
+    private  $hooks;
+    private  $tabs;
+    private  $DBPrefix;
 
-        $this->displayName = $this->l($displayName); // public name
-        $this->description = $this->l($description); // public description
-
-        $this->confirmUninstall = $this->l($confirmUninstall); // confirmation message at uninstall
-
-        $this->ps_versions_compliancy = array('min' => $min, 'max' => $max);
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
-    abstract function setRequired($sqlFile);
-    public function install($sql_file='',$hooks=[],$tabs=[]):Boolean{
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+    public function __construct(setRequiredCLS $required){
+        parent::__construct();
+        $this->name = $required->getName(); // internal identifier, unique and lowercase
+        $this->tab = $required->getTab(); // backend module coresponding category
+        $this->version = $required->getVersion(); // version number for the module
+        $this->author = $required->getAuthor(); // module author
+        $this->need_instance = $required->getNeedInstance(); // load the module when displaying the "Modules" page in backend
+        $this->bootstrap = $required->getBootstrap();
+
+        $this->displayName = $this->l($required->getDisplayName()); // public name
+        $this->description = $this->l($required->getDescription()); // public description
+
+        $this->confirmUninstall = $this->l($required->getConfirmUninstall()); // confirmation message at uninstall
+
+        $this->ps_versions_compliancy = array('min' => $required->getMin(), 'max' => $required->getMax());
+
+        $this->sqlFileInstall= $required->getSqlFileInstall();
+        $this->sqlFileUinstall= $required->getSqlFileUinstall();
+        $this->hooks = $required->getHooks();
+        $this->tabs = $required->getTabs();
+        $this->DBPrefix = $required->getDBPrefix();
+    }
+
+    public function install():Boolean{
         // Call install parent method
         if (!parent::install())
             return false;
 
         // Execute module install SQL statements
         //$sql_file = dirname(__FILE__).'/install/install.sql';
-        if($sql_file){
-            if (!$this->loadSQLFile($sql_file))
+        if($this->sqlFileInstall){
+            if (!$this->loadSQLFile($this->sqlFileInstall))
                 return false;
         }
 
-        if(!empty($hooks)){
-            foreach ($hooks as $hook){
+        if(!empty($this->hooks)){
+            foreach ($this->hooks as $hook){
                 if (!$this->registerHook($hook))
                     return false;
             }
         }
 
-        if(!empty($tabs)){
-            foreach ($tabs as $tab){
+        if(!empty($this->tabs)){
+            foreach ($this->tabs as $tab){
                 // Install admin tab
                 if (!$this->installTab($tab['parent'], $tab['className'], $tab['name']))
                     return false;
@@ -63,7 +89,27 @@ abstract class psPlugin extends \Module
 
     }
     public function uninstall(){
+        // Call uninstall parent method
+        if (!parent::uninstall())
+            return false;
 
+        // Execute module install SQL statements
+        if($this->sqlFileUinstall){
+            if (!$this->loadSQLFile($this->sqlFileUinstall))
+                return false;
+        }
+
+        // Uninstall admin tab
+        if(!empty($this->tabs)){
+            foreach ($this->tabs as $tab){
+                // Install admin tab
+                if (!$this->uninstallTab($tab['className']))
+                    return false;
+            }
+        }
+
+        // All went well!
+        return true;
     }
 
     public function loadSQLFile($sql_file){
@@ -71,17 +117,44 @@ abstract class psPlugin extends \Module
         $sql_content = file_get_contents($sql_file);
 
         // Replace prefix and store SQL command in array
-        $sql_content = str_replace('PREFIX_', _DB_PREFIX_, $sql_content);
+        $sql_content = str_replace('PREFIX_', $this->DBPrefix, $sql_content);
         $sql_requests = preg_split("/;\s*[\r\n]+/", $sql_content);
 
         // Execute each SQL statement
         $result = true;
         foreach($sql_requests as $request)
             if (!empty($request))
-                $result &= Db::getInstance()->execute(trim($request));
+                $result &= \Db::getInstance()->execute(trim($request));
 
         // Return result
         return $result;
     }
+    public function installTab($parent, $class_name, $name)
+    {
+        // Create new admin tab
+        $tab = new \Tab();
+        $tab->id_parent = (int)\Tab::getIdFromClassName($parent);
+        $tab->name = array();
+        foreach (\Language::getLanguages(true) as $lang)
+            $tab->name[$lang['id_lang']] = $name;
+        $tab->class_name = $class_name;
+        $tab->module = $this->name;
+        $tab->active = 1;
+        return $tab->add();
+    }
+    public function uninstallTab($class_name)
+    {
+        // Retrieve Tab ID
+        $id_tab = (int)\Tab::getIdFromClassName($class_name);
+
+        // Load tab
+        $tab = new \Tab((int)$id_tab);
+
+        // Delete it
+        return $tab->delete();
+    }
+
+    abstract function getHookController($hook_name);
+
 
 }
