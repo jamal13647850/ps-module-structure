@@ -10,7 +10,8 @@ namespace pgsavis\psmstructure;
 
 
 interface setRequired{
-    public function setSqlFile($sqlFile);
+    public function setSqlFileInstall($sqlFile);
+    public function setSqlFileUinstall($sqlFile);
     public function setName($name);
     public function setTab($tab);
     public function setVersion($version);
@@ -23,7 +24,8 @@ interface setRequired{
     public function setMin($min);
     public function setMax($max);
 
-    public function getSqlFile():String;
+    public function getSqlFileInstall():String;
+    public function getSqlFileUinstall():String;
     public function getName():String;
     public function getTab():String;
     public function getVersion():String;

@@ -57,7 +57,7 @@ abstract class psPlugin extends \Module
         $this->DBPrefix = $required->getDBPrefix();
     }
 
-    public function install():Boolean{
+    public function install(){
         // Call install parent method
         if (!parent::install())
             return false;
@@ -154,7 +154,17 @@ abstract class psPlugin extends \Module
         return $tab->delete();
     }
 
-    abstract function getHookController($hook_name);
+    public function getHookController($hookName,$moduleObject,$file,$path){
+        // Build dynamically the controller name
+        $controllerName = $hookName.'HookController';
+
+        // Instanciate controller
+        $controllerName = "gosafirschemagenerator\controllers\hook\\".$controllerName ;
+        $controller = new $controllerName($moduleObject, $file, $path);
+
+        // Return the controller
+        return $controller;
+    }
 
 
 }

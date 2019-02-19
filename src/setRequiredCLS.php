@@ -135,7 +135,7 @@ class setRequiredCLS{
     /**
      * @return bool
      */
-    public function getBootstrap(): Boolean
+    public function getBootstrap()
     {
         return $this->bootstrap;
     }
