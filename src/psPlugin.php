@@ -9,8 +9,6 @@ declare(strict_types=1);
 namespace pgsavis\psmstructure;
 
 
-use Couchbase\BooleanFieldSearchQuery;
-
 abstract class psPlugin extends \Module
 {
     private  $sqlFileInstall;
@@ -19,29 +17,17 @@ abstract class psPlugin extends \Module
     private  $tabs;
     private  $DBPrefix;
 
-    /**
-     * @return mixed
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
 
-    /**
-     * @param mixed $author
-     */
-    public function setAuthor($author)
-    {
-        $this->author = $author;
-    }
     public function __construct(setRequiredCLS $required){
-        parent::__construct();
+
         $this->name = $required->getName(); // internal identifier, unique and lowercase
         $this->tab = $required->getTab(); // backend module coresponding category
         $this->version = $required->getVersion(); // version number for the module
         $this->author = $required->getAuthor(); // module author
         $this->need_instance = $required->getNeedInstance(); // load the module when displaying the "Modules" page in backend
         $this->bootstrap = $required->getBootstrap();
+
+        parent::__construct();
 
         $this->displayName = $this->l($required->getDisplayName()); // public name
         $this->description = $this->l($required->getDescription()); // public description
@@ -71,6 +57,7 @@ abstract class psPlugin extends \Module
 
         if(!empty($this->hooks)){
             foreach ($this->hooks as $hook){
+
                 if (!$this->registerHook($hook))
                     return false;
             }
@@ -90,23 +77,26 @@ abstract class psPlugin extends \Module
     }
     public function uninstall(){
         // Call uninstall parent method
+
         if (!parent::uninstall())
             return false;
 
+
         // Execute module install SQL statements
-        if($this->sqlFileUinstall){
+        /*if($this->sqlFileUinstall){
             if (!$this->loadSQLFile($this->sqlFileUinstall))
                 return false;
-        }
+        }*/
+
 
         // Uninstall admin tab
-        if(!empty($this->tabs)){
+        /*if(!empty($this->tabs)){
             foreach ($this->tabs as $tab){
                 // Install admin tab
                 if (!$this->uninstallTab($tab['className']))
                     return false;
             }
-        }
+        }*/
 
         // All went well!
         return true;
@@ -154,13 +144,13 @@ abstract class psPlugin extends \Module
         return $tab->delete();
     }
 
-    public function getHookController($hookName,$moduleObject,$file,$path){
+    public function getHookController($hookName,$moduleObject,$file,$path,$context){
         // Build dynamically the controller name
         $controllerName = $hookName.'HookController';
 
         // Instanciate controller
         $controllerName = "gosafirschemagenerator\controllers\hook\\".$controllerName ;
-        $controller = new $controllerName($moduleObject, $file, $path);
+        $controller = new $controllerName($moduleObject, $file, $path,$context);
 
         // Return the controller
         return $controller;

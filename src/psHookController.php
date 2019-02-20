@@ -12,11 +12,12 @@ namespace pgsavis\psmstructure;
 abstract class psHookController implements hookController
 {
 
-    public function __construct($module, $file, $path)
+    public $module, $file, $path,$context;
+    public function __construct($module, $file, $path,$context)
     {
         $this->file = $file;
         $this->module = $module;
-        $this->context = \Context::getContext();
+        $this->context = $context;
         $this->_path = $path;
     }
 
@@ -24,5 +25,5 @@ abstract class psHookController implements hookController
 
     abstract public function proccess();
 
-    abstract public function run();
+    abstract public function run($params);
 }

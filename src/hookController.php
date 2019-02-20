@@ -13,5 +13,5 @@ interface hookController
 {
     public function assign($params);
     public function proccess();
-    public function run();
+    public function run($params);
 }
