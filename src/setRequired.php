@@ -24,17 +24,17 @@ interface setRequired{
     public function setMin($min);
     public function setMax($max);
 
-    public function getSqlFileInstall():String;
-    public function getSqlFileUinstall():String;
-    public function getName():String;
-    public function getTab():String;
-    public function getVersion():String;
-    public function getAuthor():String;
-    public function getNeedInstance():Int;
-    public function getBootstrap():Boolean;
-    public function getDisplayName():String;
-    public function getDescription():String;
-    public function getConfirmUninstall():String;
-    public function getMin():String;
-    public function getMax():String;
+    public function getSqlFileInstall();
+    public function getSqlFileUinstall();
+    public function getName();
+    public function getTab();
+    public function getVersion();
+    public function getAuthor();
+    public function getNeedInstance();
+    public function getBootstrap();
+    public function getDisplayName();
+    public function getDescription();
+    public function getConfirmUninstall();
+    public function getMin();
+    public function getMax();
 }

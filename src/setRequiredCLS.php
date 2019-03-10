@@ -22,7 +22,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getSqlFileInstall(): String
+    public function getSqlFileInstall()
     {
         return $this->sqlFileInstall;
     }
@@ -54,7 +54,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getName(): String
+    public function getName()
     {
         return $this->name;
     }
@@ -70,7 +70,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getTab(): String
+    public function getTab()
     {
         return $this->tab;
     }
@@ -86,7 +86,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getVersion(): String
+    public function getVersion()
     {
         return $this->version;
     }
@@ -102,7 +102,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getAuthor(): String
+    public function getAuthor()
     {
         return $this->author;
     }
@@ -118,7 +118,7 @@ class setRequiredCLS{
     /**
      * @return Int
      */
-    public function getNeedInstance(): Int
+    public function getNeedInstance()
     {
         return $this->needInstance;
     }
@@ -151,7 +151,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getDisplayName(): String
+    public function getDisplayName()
     {
         return $this->displayName;
     }
@@ -167,7 +167,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getDescription(): String
+    public function getDescription()
     {
         return $this->description;
     }
@@ -183,7 +183,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getConfirmUninstall(): String
+    public function getConfirmUninstall()
     {
         return $this->confirmUninstall;
     }
@@ -199,7 +199,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getMin(): String
+    public function getMin()
     {
         return $this->min;
     }
@@ -215,7 +215,7 @@ class setRequiredCLS{
     /**
      * @return String
      */
-    public function getMax(): String
+    public function getMax()
     {
         return $this->max;
     }
@@ -249,7 +249,7 @@ class setRequiredCLS{
     /**
      * @return array
      */
-    public function getTabs(): array
+    public function getTabs()
     {
         return $this->tabs;
     }
@@ -265,7 +265,7 @@ class setRequiredCLS{
     /**
      * @return array
      */
-    public function getHooks(): array
+    public function getHooks()
     {
         return $this->hooks;
     }

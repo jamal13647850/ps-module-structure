@@ -5,7 +5,7 @@
  * Date: 02/16/2019
  * Time: 14:40 PM
  */
-declare(strict_types=1);
+
 namespace pgsavis\psmstructure;
 
 
