@@ -144,12 +144,12 @@ abstract class psPlugin extends \Module
         return $tab->delete();
     }
 
-    public function getHookController($hookName,$moduleObject,$file,$path,$context){
+    public function getHookController($hookName,$moduleObject,$file,$path,$context,$classNameSpace){
         // Build dynamically the controller name
         $controllerName = $hookName.'HookController';
 
         // Instanciate controller
-        $controllerName = "gosafirschemagenerator\controllers\hook\\".$controllerName ;
+        $controllerName = $classNameSpace."\\".$controllerName ;
         $controller = new $controllerName($moduleObject, $file, $path,$context);
 
         // Return the controller
